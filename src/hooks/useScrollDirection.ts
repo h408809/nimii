@@ -53,8 +53,8 @@ export const usePersistentInView = (threshold = 0.1) => {
           setInView(true);
         } else if (hasBeenInView) {
           // Only hide if the element is completely out of view
-          const isCompletelyAbove = rect.bottom < -50; // 50px buffer
-          const isCompletelyBelow = rect.top > windowHeight + 50; // 50px buffer
+          const isCompletelyAbove = rect.bottom < -100; // 100px buffer
+          const isCompletelyBelow = rect.top > windowHeight + 100; // 100px buffer
           
           if (isCompletelyAbove || isCompletelyBelow) {
             setInView(false);
@@ -63,7 +63,7 @@ export const usePersistentInView = (threshold = 0.1) => {
       },
       {
         threshold: [0, threshold, 0.5, 1],
-        rootMargin: '-5% 0px -5% 0px' // Smaller margin for better control
+        rootMargin: '-10% 0px -10% 0px' // Smaller margin for better control
       }
     );
 
@@ -77,11 +77,12 @@ export const usePersistentInView = (threshold = 0.1) => {
   return [setRef, inView, hasBeenInView] as const;
 };
 
-// New hook for section-based visibility
-export const useSectionVisibility = (sectionId: string, threshold = 0.2) => {
+// New hook for section-based visibility with persistent behavior
+export const useSectionVisibility = (sectionId: string, threshold = 0.1) => {
   const [ref, setRef] = useState<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [hasBeenVisible, setHasBeenVisible] = useState(false);
 
   useEffect(() => {
     if (!ref) return;
@@ -92,19 +93,28 @@ export const useSectionVisibility = (sectionId: string, threshold = 0.2) => {
         const windowHeight = window.innerHeight;
         
         // Section is visible if any part is on screen
-        const visible = rect.bottom > 0 && rect.top < windowHeight;
-        setIsVisible(visible);
+        const visible = rect.bottom > 50 && rect.top < windowHeight - 50; // 50px buffer
         
-        // Section is active if it's prominently in view
+        if (visible && !hasBeenVisible) {
+          setHasBeenVisible(true);
+        }
+        
+        // Once visible, stay visible unless completely out of view
+        if (hasBeenVisible || visible) {
+          const completelyHidden = rect.bottom < -150 || rect.top > windowHeight + 150; // 150px buffer
+          setIsVisible(!completelyHidden);
+        }
+        
+        // Section is active if it's prominently in view (for special effects)
         const centerY = windowHeight / 2;
         const sectionCenter = rect.top + rect.height / 2;
         const distanceFromCenter = Math.abs(sectionCenter - centerY);
-        const isInCenter = distanceFromCenter < windowHeight * 0.3;
+        const isInCenter = distanceFromCenter < windowHeight * 0.4; // Larger active zone
         
         setIsActive(visible && isInCenter);
       },
       {
-        threshold: [0, threshold, 0.5, 1],
+        threshold: [0, threshold, 0.3, 0.7, 1],
         rootMargin: '0px'
       }
     );
@@ -114,7 +124,37 @@ export const useSectionVisibility = (sectionId: string, threshold = 0.2) => {
     return () => {
       observer.disconnect();
     };
-  }, [ref, threshold]);
+  }, [ref, threshold, hasBeenVisible]);
 
-  return [setRef, isVisible, isActive] as const;
+  return [setRef, isVisible, isActive, hasBeenVisible] as const;
+};
+
+// Hook for elements that should stay visible once they appear
+export const useStayVisible = (threshold = 0.1) => {
+  const [ref, setRef] = useState<HTMLElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (!ref) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) {
+          setIsVisible(true);
+        }
+      },
+      {
+        threshold,
+        rootMargin: '0px 0px -10% 0px'
+      }
+    );
+
+    observer.observe(ref);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref, threshold, isVisible]);
+
+  return [setRef, isVisible] as const;
 };
