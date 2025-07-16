@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { usePersistentInView } from '../hooks/useScrollDirection';
+import { useSectionVisibility } from '../hooks/useScrollDirection';
 import { Award, ExternalLink, CheckCircle, Calendar } from 'lucide-react';
 
 const Certifications: React.FC = () => {
-  const [ref, inView] = usePersistentInView(0.1);
+  const [ref, isVisible, isActive] = useSectionVisibility('certifications', 0.1);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -80,13 +80,13 @@ const Certifications: React.FC = () => {
   ];
 
   return (
-    <section id="certifications" className="py-20 bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
-      <div className="container mx-auto px-6">
+    <section id="certifications" className="py-20 bg-gradient-to-br from-pink-50/50 to-peach-50/50 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
           variants={containerVariants}
           initial="hidden"
-          animate="visible"
+          animate={isVisible ? "visible" : "hidden"}
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
@@ -97,45 +97,55 @@ const Certifications: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {certifications.map((cert, index) => (
             <motion.div
               key={cert.title}
               variants={itemVariants}
               initial="hidden"
-              animate="visible"
+              animate={isVisible ? "visible" : "hidden"}
               transition={{ delay: index * 0.2 }}
               className="group"
             >
-              <div className="glass p-8 rounded-2xl hover-lift transition-all-300 border border-white/10">
-                <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${cert.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  {cert.icon}
-                </div>
-                
-                <h3 className="text-xl font-bold text-white mb-2">{cert.title}</h3>
-                <p className="text-gray-300 mb-4">{cert.issuer}</p>
-                
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm text-gray-400">{cert.date}</span>
+              <motion.div
+                className="glass rounded-2xl overflow-hidden hover-lift transition-all-300 h-full"
+                whileHover={{ scale: 1.02 }}
+                animate={{
+                  opacity: isVisible ? 1 : 0.4,
+                  scale: isActive ? 1 : 0.98,
+                  y: isVisible ? 0 : 30
+                }}
+              >
+                <div className="glass p-8 rounded-2xl hover-lift transition-all-300 border border-white/10">
+                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${cert.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                    {cert.icon}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-400" />
-                    <span className="text-sm text-green-400">{cert.status}</span>
+                  
+                  <h3 className="text-xl font-bold text-white mb-2">{cert.title}</h3>
+                  <p className="text-gray-300 mb-4">{cert.issuer}</p>
+                  
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-gray-400" />
+                      <span className="text-sm text-gray-400">{cert.date}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <span className="text-sm text-green-400">{cert.status}</span>
+                    </div>
                   </div>
+                  
+                  <p className="text-sm text-gray-400 mb-6">ID: {cert.credentialId}</p>
+                  
+                  <a
+                    href={cert.link}
+                    className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
+                  >
+                    <span>Verify Credential</span>
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
                 </div>
-                
-                <p className="text-sm text-gray-400 mb-6">ID: {cert.credentialId}</p>
-                
-                <a
-                  href={cert.link}
-                  className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
-                >
-                  <span>Verify Credential</span>
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-              </div>
+              </motion.div>
             </motion.div>
           ))}
         </div>
@@ -143,7 +153,7 @@ const Certifications: React.FC = () => {
         <motion.div
           variants={itemVariants}
           initial="hidden"
-          animate="visible"
+          animate={isVisible ? "visible" : "hidden"}
           transition={{ delay: 0.6 }}
           className="mt-16"
         >
@@ -158,7 +168,7 @@ const Certifications: React.FC = () => {
                 className="glass p-6 rounded-xl text-center hover-lift transition-all-300"
                 whileHover={{ scale: 1.05 }}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0.3, y: 20 }}
                 transition={{ delay: 0.8 + index * 0.1 }}
               >
                 <h4 className="text-xl font-bold text-white mb-2">{item.title}</h4>
