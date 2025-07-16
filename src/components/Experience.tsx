@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { usePersistentInView } from '../hooks/useScrollDirection';
+import { useSectionVisibility } from '../hooks/useScrollDirection';
 import { Briefcase, Calendar, MapPin, CheckCircle } from 'lucide-react';
 
 const Experience: React.FC = () => {
-  const [ref, inView] = usePersistentInView(0.1);
+  const [ref, isVisible, isActive] = useSectionVisibility('experience', 0.1);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -89,7 +89,7 @@ const Experience: React.FC = () => {
           ref={ref}
           variants={containerVariants}
           initial="hidden"
-          animate="visible"
+          animate={isVisible ? "visible" : "hidden"}
           className="text-center mb-16"
         >
           <motion.div variants={itemVariants}>
@@ -106,7 +106,7 @@ const Experience: React.FC = () => {
         <motion.div
           variants={itemVariants}
           initial="hidden"
-          animate="visible"
+          animate={isVisible ? "visible" : "hidden"}
           className="max-w-4xl mx-auto"
         >
           <div className="space-y-12">
@@ -116,6 +116,11 @@ const Experience: React.FC = () => {
                 variants={itemVariants}
                 transition={{ delay: index * 0.2 }}
                 className="relative bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-300"
+                animate={{
+                  opacity: isVisible ? 1 : 0.4,
+                  scale: isActive ? 1 : 0.98,
+                  y: isVisible ? 0 : 30
+                }}
               >
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6">
                   <div className="flex-1">
@@ -150,7 +155,7 @@ const Experience: React.FC = () => {
                       key={achievementIndex}
                       variants={achievementVariants}
                      initial="hidden"
-                     animate="visible"
+                     animate={isVisible ? "visible" : "hidden"}
                      transition={{ delay: 0.5 + achievementIndex * 0.1 }}
                      className="flex items-start group/achievement"
                    >
@@ -169,7 +174,7 @@ const Experience: React.FC = () => {
         <motion.div
           variants={itemVariants}
          initial="hidden"
-         animate="visible"
+         animate={isVisible ? "visible" : "hidden"}
         transition={{ delay: 0.8 }}
         className="mt-16 text-center"
       >

@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { usePersistentInView } from '../hooks/useScrollDirection';
+import { useSectionVisibility } from '../hooks/useScrollDirection';
 import { ExternalLink, Github, Brain, Shield, Newspaper } from 'lucide-react';
 
 const Projects: React.FC = () => {
-  const [ref, inView] = usePersistentInView(0.1);
+  const [ref, isVisible, isActive] = useSectionVisibility('projects', 0.1);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -82,7 +82,7 @@ const Projects: React.FC = () => {
           ref={ref}
           variants={containerVariants}
           initial="hidden"
-          animate="visible"
+          animate={isVisible ? "visible" : "hidden"}
           className="text-center mb-16"
         >
           <motion.h2 
@@ -105,79 +105,87 @@ const Projects: React.FC = () => {
               key={project.title}
               variants={itemVariants}
               initial="hidden"
-              animate="visible"
+              animate={isVisible ? "visible" : "hidden"}
               transition={{ delay: index * 0.2 }}
               className="group"
             >
               <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                <div className={`h-2 bg-gradient-to-r ${project.color}`}></div>
-                
-                <div className="p-8">
-                  <div className="flex items-center mb-4">
-                    <div className={`p-3 rounded-lg bg-gradient-to-r ${project.color} text-white mr-4`}>
-                      {project.icon}
+                <motion.div
+                  animate={{
+                    opacity: isVisible ? 1 : 0.4,
+                    scale: isActive ? 1 : 0.98,
+                    y: isVisible ? 0 : 30
+                  }}
+                >
+                  <div className={`h-2 bg-gradient-to-r ${project.color}`}></div>
+                  
+                  <div className="p-8">
+                    <div className="flex items-center mb-4">
+                      <div className={`p-3 rounded-lg bg-gradient-to-r ${project.color} text-white mr-4`}>
+                        {project.icon}
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                        {project.title}
+                      </h3>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                      {project.title}
-                    </h3>
-                  </div>
 
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    {project.description}
-                  </p>
+                    <p className="text-gray-600 mb-6 leading-relaxed">
+                      {project.description}
+                    </p>
 
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold text-gray-900 mb-3">Key Features:</h4>
-                    <ul className="space-y-2">
-                      {project.features.map((feature, featureIndex) => (
-                        <motion.li
-                          key={featureIndex}
-                          className="text-gray-600 text-sm flex items-start"
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.2 + featureIndex * 0.1 }}
-                        >
-                          <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                          {feature}
-                        </motion.li>
-                      ))}
-                    </ul>
-                  </div>
+                    <div className="mb-6">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-3">Key Features:</h4>
+                      <ul className="space-y-2">
+                        {project.features.map((feature, featureIndex) => (
+                          <motion.li
+                            key={featureIndex}
+                            className="text-gray-600 text-sm flex items-start"
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0.3, x: -10 }}
+                            transition={{ delay: index * 0.2 + featureIndex * 0.1 }}
+                          >
+                            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            {feature}
+                          </motion.li>
+                        ))}
+                      </ul>
+                    </div>
 
-                  <div className="mb-6">
-                    <div className="flex flex-wrap gap-2">
-                      {project.tech.map((tech, techIndex) => (
-                        <span
-                          key={techIndex}
-                          className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full font-medium"
-                        >
-                          {tech}
-                        </span>
-                      ))}
+                    <div className="mb-6">
+                      <div className="flex flex-wrap gap-2">
+                        {project.tech.map((tech, techIndex) => (
+                          <span
+                            key={techIndex}
+                            className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full font-medium"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex space-x-4">
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+                      >
+                        <Github className="w-4 h-4 mr-2" />
+                        Code
+                      </a>
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Demo
+                      </a>
                     </div>
                   </div>
-
-                  <div className="flex space-x-4">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
-                    >
-                      <Github className="w-4 h-4 mr-2" />
-                      Code
-                    </a>
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Demo
-                    </a>
-                  </div>
-                </div>
+                </motion.div>
               </div>
             </motion.div>
           ))}
@@ -186,7 +194,7 @@ const Projects: React.FC = () => {
         <motion.div
           variants={itemVariants}
           initial="hidden"
-          animate="visible"
+          animate={isVisible ? "visible" : "hidden"}
           transition={{ delay: 0.8 }}
           className="text-center mt-16"
         >

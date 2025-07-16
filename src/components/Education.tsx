@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { usePersistentInView } from '../hooks/useScrollDirection';
+import { useSectionVisibility } from '../hooks/useScrollDirection';
 import { GraduationCap, Calendar, MapPin, Award } from 'lucide-react';
 import DynamicHeading from './DynamicHeading';
 import ScrollAnimatedSection from './ScrollAnimatedSection';
 
 const Education: React.FC = () => {
-  const [ref, inView] = usePersistentInView(0.1);
+  const [ref, isVisible, isActive] = useSectionVisibility('education', 0.1);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -83,14 +83,14 @@ const Education: React.FC = () => {
             ref={ref}
             variants={containerVariants}
             initial="hidden"
-            animate="visible"
+            animate={isVisible ? "visible" : "hidden"}
           >
             {educationData.map((edu, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
                 initial="hidden"
-                animate="visible"
+                animate={isVisible ? "visible" : "hidden"}
                 transition={{ delay: index * 0.2 }}
                 className="relative"
               >

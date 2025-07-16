@@ -28,7 +28,7 @@ export const useScrollDirection = () => {
   return { scrollDirection, scrollY };
 };
 
-// New hook for persistent visibility
+// Enhanced hook for persistent visibility with better control
 export const usePersistentInView = (threshold = 0.1) => {
   const [ref, setRef] = useState<HTMLElement | null>(null);
   const [inView, setInView] = useState(false);
@@ -40,17 +40,21 @@ export const usePersistentInView = (threshold = 0.1) => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         const isIntersecting = entry.isIntersecting;
+        const rect = entry.boundingClientRect;
+        const windowHeight = window.innerHeight;
+        
+        // Element is considered "in view" if any part is visible
+        const isVisible = rect.bottom > 0 && rect.top < windowHeight;
         
         if (isIntersecting && !hasBeenInView) {
           setHasBeenInView(true);
           setInView(true);
-        } else if (isIntersecting) {
+        } else if (isVisible) {
           setInView(true);
         } else if (hasBeenInView) {
           // Only hide if the element is completely out of view
-          const rect = entry.boundingClientRect;
-          const isCompletelyAbove = rect.bottom < 0;
-          const isCompletelyBelow = rect.top > window.innerHeight;
+          const isCompletelyAbove = rect.bottom < -50; // 50px buffer
+          const isCompletelyBelow = rect.top > windowHeight + 50; // 50px buffer
           
           if (isCompletelyAbove || isCompletelyBelow) {
             setInView(false);
@@ -58,8 +62,8 @@ export const usePersistentInView = (threshold = 0.1) => {
         }
       },
       {
-        threshold: [0, threshold, 1],
-        rootMargin: '-10% 0px -10% 0px'
+        threshold: [0, threshold, 0.5, 1],
+        rootMargin: '-5% 0px -5% 0px' // Smaller margin for better control
       }
     );
 
@@ -71,4 +75,46 @@ export const usePersistentInView = (threshold = 0.1) => {
   }, [ref, threshold, hasBeenInView]);
 
   return [setRef, inView, hasBeenInView] as const;
+};
+
+// New hook for section-based visibility
+export const useSectionVisibility = (sectionId: string, threshold = 0.2) => {
+  const [ref, setRef] = useState<HTMLElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    if (!ref) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const rect = entry.boundingClientRect;
+        const windowHeight = window.innerHeight;
+        
+        // Section is visible if any part is on screen
+        const visible = rect.bottom > 0 && rect.top < windowHeight;
+        setIsVisible(visible);
+        
+        // Section is active if it's prominently in view
+        const centerY = windowHeight / 2;
+        const sectionCenter = rect.top + rect.height / 2;
+        const distanceFromCenter = Math.abs(sectionCenter - centerY);
+        const isInCenter = distanceFromCenter < windowHeight * 0.3;
+        
+        setIsActive(visible && isInCenter);
+      },
+      {
+        threshold: [0, threshold, 0.5, 1],
+        rootMargin: '0px'
+      }
+    );
+
+    observer.observe(ref);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref, threshold]);
+
+  return [setRef, isVisible, isActive] as const;
 };
