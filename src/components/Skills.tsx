@@ -112,7 +112,7 @@
       <span class="hidden" id="cf-footer-ip">2405:201:400a:d073:44ac:20f5:bc32:1249</span>
       <span class="cf-footer-separator sm:hidden">&bull;</span>
     </span>
-    <span class="cf-footer-item sm:block sm:mb-1"><span>Performance &amp; security by</span> <a rel="noopener noreferrer" href="https://www.cloudflare.com/5xx-error-landing?utm_source=errorcode_524&utm_campaign=bolt.new" id="brand_link" target="_blank">Cloudflare</a></span>
+    <span class="cf-footer-item sm:block sm:mb-1"><span>Performance &amp; security by</span> <a rel="noopener noreferrer" href="https://www.cloudflare.com/5xx-error-landing?utm_source=errorcode_524&utm_campaign=bolt.new" id=\"brand_link\" target="_blank">Cloudflare</a></span>
     
   </p>
   <script>(function(){function d(){var b=a.getElementById("cf-footer-item-ip"),c=a.getElementById("cf-footer-ip-reveal");b&&"classList"in b&&(b.classList.remove("hidden"),c.addEventListener("click",function(){c.classList.add("hidden");a.getElementById("cf-footer-ip").classList.remove("hidden")}))}var a=document;document.addEventListener&&a.addEventListener("DOMContentLoaded",d)})();</script>
