@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useSectionVisibility } from '../hooks/useScrollDirection';
+import { useSectionBasedVisibility } from '../hooks/useScrollDirection';
 import { Mail, Phone, MapPin, Github, Linkedin, Send, MessageSquare } from 'lucide-react';
 
 const Contact: React.FC = () => {
-  const [ref, isVisible, isActive] = useSectionVisibility('contact', 0.1);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  const [ref, isVisible, isActive, hasBeenVisible] = useSectionBasedVisibility('contact', 0.1);
     visible: {
       opacity: 1,
       transition: {
@@ -89,7 +86,7 @@ const Contact: React.FC = () => {
             variants={itemVariants}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
-            className="space-y-6"
+            animate={isVisible ? "visible" : "hidden"}
           >
             <h3 className="text-2xl font-semibold text-gray-800 mb-8">Get in Touch</h3>
             
@@ -105,7 +102,7 @@ const Contact: React.FC = () => {
                     className="flex items-center p-4 rounded-xl hover:bg-white/50 transition-all-300 group"
                     whileHover={{ x: 10 }}
                     initial={{ opacity: 0, x: -20 }}
-                    animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0.3, x: -20 }}
+                    animate={isVisible ? { opacity: 1, x: 0 } : {}}
                     transition={{ delay: index * 0.1 }}
                   >
                     <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
@@ -127,7 +124,7 @@ const Contact: React.FC = () => {
               animate={isVisible ? "visible" : "hidden"}
               transition={{ delay: 0.4 }}
             >
-              <div className="flex items-center mb-4">
+              animate={isVisible ? "visible" : "hidden"}
                 <MessageSquare className="w-6 h-6 text-pink-500 mr-3" />
                 <h4 className="text-lg font-semibold text-gray-800">Quick Response</h4>
               </div>
@@ -216,7 +213,7 @@ const Contact: React.FC = () => {
           className="text-center mt-16 pt-8 border-t border-pink-200"
         >
           <p className="text-gray-600">
-            Prefer a different way to connect? Find me on social media or drop me a line directly.
+          animate={isVisible ? "visible" : "hidden"}
           </p>
         </motion.div>
       </div>

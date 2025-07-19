@@ -1,15 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useSectionVisibility } from '../hooks/useScrollDirection';
+import { useSectionBasedVisibility } from '../hooks/useScrollDirection';
 import { GraduationCap, Calendar, MapPin, Award } from 'lucide-react';
 import DynamicHeading from './DynamicHeading';
 import ScrollAnimatedSection from './ScrollAnimatedSection';
 
 const Education: React.FC = () => {
-  const [ref, isVisible, isActive] = useSectionVisibility('education', 0.1);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  const [ref, isVisible, isActive, hasBeenVisible] = useSectionBasedVisibility('education', 0.1);
     visible: {
       opacity: 1,
       transition: {
@@ -82,7 +79,7 @@ const Education: React.FC = () => {
           <motion.div
             ref={ref}
             variants={containerVariants}
-            initial="hidden"
+        <ScrollAnimatedSection className="text-center mb-16" sectionId="education">
             animate={isVisible ? "visible" : "hidden"}
           >
             {educationData.map((edu, index) => (
@@ -93,6 +90,7 @@ const Education: React.FC = () => {
                 animate={isVisible ? "visible" : "hidden"}
                 transition={{ delay: index * 0.2 }}
                 className="relative"
+                sectionId="education"
               >
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8 border-l-4 border-blue-500">
                   <div className="flex items-start justify-between mb-4">
@@ -106,7 +104,7 @@ const Education: React.FC = () => {
                           {edu.institution}
                         </p>
                       </div>
-                    </div>
+                  animate={isVisible ? "visible" : "hidden"}
                     <div className="text-right">
                       <div className="flex items-center text-gray-500 dark:text-gray-400 mb-1">
                         <Calendar className="w-4 h-4 mr-1" />
@@ -116,6 +114,7 @@ const Education: React.FC = () => {
                         <MapPin className="w-4 h-4 mr-1" />
                         <span>{edu.location}</span>
                       </div>
+                    animate={{ opacity: isVisible ? 1 : 0.3 }}
                     </div>
                   </div>
 

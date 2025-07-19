@@ -1,13 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useSectionVisibility } from '../hooks/useScrollDirection';
+import { useSectionBasedVisibility } from '../hooks/useScrollDirection';
 import { ExternalLink, Github, Brain, Shield, Newspaper } from 'lucide-react';
 
 const Projects: React.FC = () => {
-  const [ref, isVisible, isActive] = useSectionVisibility('projects', 0.1);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  const [ref, isVisible, isActive, hasBeenVisible] = useSectionBasedVisibility('projects', 0.1);
     visible: {
       opacity: 1,
       transition: {
@@ -100,8 +97,9 @@ const Projects: React.FC = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                animate={{ opacity: isVisible ? 1 : 0.3 }}
           {projects.map((project, index) => (
-            <motion.div
+          animate={isVisible ? "visible" : "hidden"}
               key={project.title}
               variants={itemVariants}
               initial="hidden"
@@ -129,7 +127,7 @@ const Projects: React.FC = () => {
                       </h3>
                     </div>
 
-                    <p className="text-gray-600 mb-6 leading-relaxed">
+                          animate={isVisible ? { opacity: 1, x: 0 } : {}}
                       {project.description}
                     </p>
 
@@ -189,7 +187,7 @@ const Projects: React.FC = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+          animate={isVisible ? "visible" : "hidden"}
 
         <motion.div
           variants={itemVariants}
@@ -217,3 +215,4 @@ const Projects: React.FC = () => {
 };
 
 export default Projects;
+              animate={isVisible ? "visible" : "hidden"}

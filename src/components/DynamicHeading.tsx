@@ -1,27 +1,23 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useSectionVisibility, useScrollDirection } from '../hooks/useScrollDirection';
-
+import { useSectionBasedVisibility } from '../hooks/useScrollDirection';
 interface DynamicHeadingProps {
   children: React.ReactNode;
   level?: 'h1' | 'h2' | 'h3' | 'h4';
   className?: string;
+  sectionId?: string;
 }
 
 const DynamicHeading: React.FC<DynamicHeadingProps> = ({
   children,
-  level = 'h2',
-  className = ''
-}) => {
-  const [ref, isVisible, isActive, hasBeenVisible] = useSectionVisibility('', 0.2);
-  const { scrollDirection } = useScrollDirection();
+  const [ref, isVisible, isActive, hasBeenVisible] = useSectionBasedVisibility(sectionId, 0.3);
 
   const HeadingTag = level;
 
   const getAnimationState = () => {
     if (hasBeenVisible) {
       // Once visible, stay visible with subtle changes
-      return {
+      y: 50,
         opacity: isActive ? 1 : 0.9,
         y: 0,
         scale: isActive ? 1 : 0.99,
@@ -48,7 +44,7 @@ const DynamicHeading: React.FC<DynamicHeadingProps> = ({
 
   return (
     <motion.div
-      ref={ref}
+      animate={isVisible ? "visible" : "hidden"}
       className="relative"
       initial={{
         opacity: 0,

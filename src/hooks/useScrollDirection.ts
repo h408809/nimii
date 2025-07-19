@@ -28,6 +28,75 @@ export const useScrollDirection = () => {
   return { scrollDirection, scrollY };
 };
 
+// Hook for section-based visibility - stays visible until next section
+export const useSectionBasedVisibility = (sectionId: string, threshold = 0.1) => {
+  const [ref, setRef] = useState<HTMLElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [hasBeenVisible, setHasBeenVisible] = useState(false);
+
+  useEffect(() => {
+    if (!ref) return;
+
+    // Get all sections to determine order
+    const sections = ['home', 'about', 'education', 'skills', 'experience', 'projects', 'certifications', 'contact'];
+    const currentIndex = sections.indexOf(sectionId);
+    const nextSectionId = sections[currentIndex + 1];
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const rect = entry.boundingClientRect;
+        const windowHeight = window.innerHeight;
+        
+        // Section is visible if any part is on screen
+        const sectionVisible = rect.bottom > 0 && rect.top < windowHeight;
+        
+        // Mark as seen when first visible
+        if (sectionVisible && !hasBeenVisible) {
+          setHasBeenVisible(true);
+        }
+        
+        // Check if next section is coming into view
+        let nextSectionInView = false;
+        if (nextSectionId) {
+          const nextSection = document.getElementById(nextSectionId);
+          if (nextSection) {
+            const nextRect = nextSection.getBoundingClientRect();
+            // Next section is considered "in view" when it's 30% visible
+            nextSectionInView = nextRect.top < windowHeight * 0.7;
+          }
+        }
+        
+        // Section stays visible until next section comes into view or completely out of viewport
+        if (hasBeenVisible || sectionVisible) {
+          const completelyHidden = rect.bottom < -200 || rect.top > windowHeight + 200;
+          setIsVisible(!completelyHidden && !nextSectionInView);
+        }
+        
+        // Section is active when prominently in view
+        const centerY = windowHeight / 2;
+        const sectionCenter = rect.top + rect.height / 2;
+        const distanceFromCenter = Math.abs(sectionCenter - centerY);
+        const isInCenter = distanceFromCenter < windowHeight * 0.4;
+        
+        setIsActive(sectionVisible && isInCenter && !nextSectionInView);
+      },
+      {
+        threshold: [0, threshold, 0.3, 0.7, 1],
+        rootMargin: '0px'
+      }
+    );
+
+    observer.observe(ref);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref, threshold, hasBeenVisible, sectionId]);
+
+  return [setRef, isVisible, isActive, hasBeenVisible] as const;
+};
+
 // Enhanced hook for persistent visibility with better control
 export const usePersistentInView = (threshold = 0.1) => {
   const [ref, setRef] = useState<HTMLElement | null>(null);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useSectionVisibility, useScrollDirection } from '../hooks/useScrollDirection';
+import { useSectionBasedVisibility, useScrollDirection } from '../hooks/useScrollDirection';
 
 interface ScrollAnimatedSectionProps {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ interface ScrollAnimatedSectionProps {
   duration?: number;
   threshold?: number;
   id?: string;
-  stayVisible?: boolean; // New prop to control persistent visibility
+  sectionId?: string; // Section ID for section-based visibility
 }
 
 const ScrollAnimatedSection: React.FC<ScrollAnimatedSectionProps> = ({
@@ -21,49 +21,49 @@ const ScrollAnimatedSection: React.FC<ScrollAnimatedSectionProps> = ({
   duration = 0.8,
   threshold = 0.1,
   id,
-  stayVisible = true // Default to staying visible
+  sectionId = '' // Section ID for visibility control
 }) => {
-  const [ref, isVisible, isActive, hasBeenVisible] = useSectionVisibility(id || '', threshold);
+  const [ref, isVisible, isActive, hasBeenVisible] = useSectionBasedVisibility(sectionId || id || '', threshold);
   const { scrollDirection } = useScrollDirection();
 
   const getAnimationState = () => {
-    if (stayVisible && hasBeenVisible) {
+    if (hasBeenVisible) {
       // Once visible, stay visible with subtle opacity changes
       return {
         x: 0,
         y: 0,
-        opacity: isActive ? 1 : 0.85, // Slight opacity reduction when not active
-        scale: isActive ? 1 : 0.99, // Subtle scale change
+        opacity: isVisible ? (isActive ? 1 : 0.95) : 0.3, // Fade out when not visible
+        scale: isVisible ? (isActive ? 1 : 0.99) : 0.97, // Subtle scale change
         filter: 'blur(0px)',
         rotateX: 0,
         rotateY: 0
       };
     }
 
-    if (!isVisible) {
-      // Exit animations based on scroll direction (only if not staying visible)
+    if (!isVisible && !hasBeenVisible) {
+      // Initial hidden state
       const exitDistance = 30;
       const exitVariants = {
         left: { 
-          x: scrollDirection === 'down' ? -exitDistance : exitDistance,
+          x: -exitDistance,
           opacity: 0.2,
           scale: 0.95,
           filter: 'blur(2px)'
         },
         right: { 
-          x: scrollDirection === 'down' ? exitDistance : -exitDistance,
+          x: exitDistance,
           opacity: 0.2,
           scale: 0.95,
           filter: 'blur(2px)'
         },
         up: { 
-          y: scrollDirection === 'down' ? -exitDistance : exitDistance,
+          y: exitDistance,
           opacity: 0.2,
           scale: 0.95,
           filter: 'blur(2px)'
         },
         down: { 
-          y: scrollDirection === 'down' ? exitDistance : -exitDistance,
+          y: -exitDistance,
           opacity: 0.2,
           scale: 0.95,
           filter: 'blur(2px)'
@@ -76,7 +76,7 @@ const ScrollAnimatedSection: React.FC<ScrollAnimatedSectionProps> = ({
     return {
       x: 0,
       y: 0,
-      opacity: isActive ? 1 : 0.9,
+      opacity: isVisible ? (isActive ? 1 : 0.95) : 0.3,
       scale: isActive ? 1 : 0.99,
       filter: 'blur(0px)',
       rotateX: 0,
@@ -106,7 +106,7 @@ const ScrollAnimatedSection: React.FC<ScrollAnimatedSectionProps> = ({
       initial={initialState}
       animate={animationState}
       transition={{
-        duration: hasBeenVisible ? (isActive ? 0.6 : 0.4) : duration,
+        duration: hasBeenVisible ? 0.6 : duration,
         delay: hasBeenVisible ? 0 : delay,
         ease: [0.25, 0.46, 0.45, 0.94],
         type: "spring",
