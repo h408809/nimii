@@ -5,6 +5,9 @@ import { Briefcase, Calendar, MapPin, CheckCircle } from 'lucide-react';
 
 const Experience: React.FC = () => {
   const [ref, isVisible, isActive, hasBeenVisible] = useSectionBasedVisibility('experience', 0.1);
+  
+  const containerVariants = {
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
@@ -38,7 +41,7 @@ const Experience: React.FC = () => {
   };
 
   const experiences = [
-          animate={isVisible ? "visible" : "hidden"}
+    {
       title: "Senior Frontend Developer",
       company: "TechCorp Solutions",
       period: "2022 - Present",
@@ -106,7 +109,7 @@ const Experience: React.FC = () => {
           animate={isVisible ? "visible" : "hidden"}
           className="max-w-4xl mx-auto"
         >
-          animate={isVisible ? "visible" : "hidden"}
+          <div className="space-y-8">
             {experiences.map((exp, index) => (
               <motion.div
                 key={index}
@@ -118,7 +121,6 @@ const Experience: React.FC = () => {
                   scale: isActive ? 1 : 0.98,
                   y: isVisible ? 0 : 30
                 }}
-                animate={{ opacity: isVisible ? 1 : 0.3 }}
               >
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6">
                   <div className="flex-1">
@@ -131,7 +133,7 @@ const Experience: React.FC = () => {
                     <p className="text-gray-600 dark:text-gray-300 mb-4">
                       {exp.description}
                     </p>
-                        animate={isVisible ? "visible" : "hidden"}
+                  </div>
                   <div className="flex flex-col md:items-end space-y-2 md:ml-6">
                     <div className="flex items-center text-gray-500 dark:text-gray-400">
                       <Calendar className="w-4 h-4 mr-2" />
@@ -173,7 +175,6 @@ const Experience: React.FC = () => {
           variants={itemVariants}
          initial="hidden"
          animate={isVisible ? "visible" : "hidden"}
-          animate={isVisible ? "visible" : "hidden"}
         className="mt-16 text-center"
       >
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 text-white">

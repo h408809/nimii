@@ -5,6 +5,9 @@ import { Mail, Phone, MapPin, Github, Linkedin, Send, MessageSquare } from 'luci
 
 const Contact: React.FC = () => {
   const [ref, isVisible, isActive, hasBeenVisible] = useSectionBasedVisibility('contact', 0.1);
+  
+  const containerVariants = {
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
@@ -86,7 +89,6 @@ const Contact: React.FC = () => {
             variants={itemVariants}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
-            animate={isVisible ? "visible" : "hidden"}
           >
             <h3 className="text-2xl font-semibold text-gray-800 mb-8">Get in Touch</h3>
             
@@ -124,7 +126,7 @@ const Contact: React.FC = () => {
               animate={isVisible ? "visible" : "hidden"}
               transition={{ delay: 0.4 }}
             >
-              animate={isVisible ? "visible" : "hidden"}
+              <div className="flex items-center mb-4">
                 <MessageSquare className="w-6 h-6 text-pink-500 mr-3" />
                 <h4 className="text-lg font-semibold text-gray-800">Quick Response</h4>
               </div>
@@ -213,7 +215,7 @@ const Contact: React.FC = () => {
           className="text-center mt-16 pt-8 border-t border-pink-200"
         >
           <p className="text-gray-600">
-          animate={isVisible ? "visible" : "hidden"}
+            Let's create something amazing together!
           </p>
         </motion.div>
       </div>
