@@ -5,6 +5,9 @@ import { Award, ExternalLink, CheckCircle, Calendar } from 'lucide-react';
 
 const Certifications: React.FC = () => {
   const [ref, isVisible, isActive, hasBeenVisible] = useSectionBasedVisibility('certifications', 0.1);
+  
+  const containerVariants = {
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
@@ -74,7 +77,7 @@ const Certifications: React.FC = () => {
       platform: "Tech Conferences",
       description: "Speaker at various technology conferences and meetups",
     },
-          animate={isVisible ? "visible" : "hidden"}
+  ];
 
   return (
     <section id="certifications" className="py-20 bg-gradient-to-br from-pink-50/50 to-peach-50/50 relative overflow-hidden">
@@ -106,7 +109,6 @@ const Certifications: React.FC = () => {
             >
               <motion.div
                 className="glass rounded-2xl overflow-hidden hover-lift transition-all-300 h-full"
-              animate={isVisible ? "visible" : "hidden"}
                 animate={{
                   opacity: isVisible ? 1 : 0.4,
                   scale: isActive ? 1 : 0.98,
@@ -130,7 +132,6 @@ const Certifications: React.FC = () => {
                       <CheckCircle className="w-4 h-4 text-green-400" />
                       <span className="text-sm text-green-400">{cert.status}</span>
                     </div>
-                animate={{ opacity: isVisible ? 1 : 0.3 }}
                   </div>
                   
                   <p className="text-sm text-gray-400 mb-6">ID: {cert.credentialId}</p>
@@ -182,4 +183,3 @@ const Certifications: React.FC = () => {
 };
 
 export default Certifications;
-                  animate={isVisible ? { opacity: 1, y: 0 } : {}}
