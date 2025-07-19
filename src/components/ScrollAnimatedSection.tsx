@@ -32,8 +32,8 @@ const ScrollAnimatedSection: React.FC<ScrollAnimatedSectionProps> = ({
       return {
         x: 0,
         y: 0,
-        opacity: isVisible ? (isActive ? 1 : 0.95) : 0.3, // Fade out when not visible
-        scale: isVisible ? (isActive ? 1 : 0.99) : 0.97, // Subtle scale change
+        opacity: isVisible ? 1 : 0.4, // Stay more visible when not active
+        scale: isVisible ? 1 : 0.98, // Minimal scale change
         filter: 'blur(0px)',
         rotateX: 0,
         rotateY: 0
@@ -46,25 +46,25 @@ const ScrollAnimatedSection: React.FC<ScrollAnimatedSectionProps> = ({
       const exitVariants = {
         left: { 
           x: -exitDistance,
-          opacity: 0.2,
+          opacity: 0,
           scale: 0.95,
           filter: 'blur(2px)'
         },
         right: { 
           x: exitDistance,
-          opacity: 0.2,
+          opacity: 0,
           scale: 0.95,
           filter: 'blur(2px)'
         },
         up: { 
           y: exitDistance,
-          opacity: 0.2,
+          opacity: 0,
           scale: 0.95,
           filter: 'blur(2px)'
         },
         down: { 
           y: -exitDistance,
-          opacity: 0.2,
+          opacity: 0,
           scale: 0.95,
           filter: 'blur(2px)'
         }
@@ -76,8 +76,8 @@ const ScrollAnimatedSection: React.FC<ScrollAnimatedSectionProps> = ({
     return {
       x: 0,
       y: 0,
-      opacity: isVisible ? (isActive ? 1 : 0.95) : 0.3,
-      scale: isActive ? 1 : 0.99,
+      opacity: isVisible ? 1 : 0.4,
+      scale: 1,
       filter: 'blur(0px)',
       rotateX: 0,
       rotateY: 0

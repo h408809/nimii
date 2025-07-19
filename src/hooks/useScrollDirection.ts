@@ -48,8 +48,8 @@ export const useSectionBasedVisibility = (sectionId: string, threshold = 0.1) =>
         const rect = entry.boundingClientRect;
         const windowHeight = window.innerHeight;
         
-        // Section is visible if any part is on screen
-        const sectionVisible = rect.bottom > 0 && rect.top < windowHeight;
+        // Section is visible if any part is on screen with generous buffer
+        const sectionVisible = rect.bottom > -100 && rect.top < windowHeight + 100;
         
         // Mark as seen when first visible
         if (sectionVisible && !hasBeenVisible) {
@@ -62,14 +62,14 @@ export const useSectionBasedVisibility = (sectionId: string, threshold = 0.1) =>
           const nextSection = document.getElementById(nextSectionId);
           if (nextSection) {
             const nextRect = nextSection.getBoundingClientRect();
-            // Next section is considered "in view" when it's 30% visible
-            nextSectionInView = nextRect.top < windowHeight * 0.7;
+            // Next section is considered "in view" when it's 50% visible
+            nextSectionInView = nextRect.top < windowHeight * 0.5;
           }
         }
         
-        // Section stays visible until next section comes into view or completely out of viewport
+        // Section stays visible until next section comes significantly into view or completely out of viewport
         if (hasBeenVisible || sectionVisible) {
-          const completelyHidden = rect.bottom < -200 || rect.top > windowHeight + 200;
+          const completelyHidden = rect.bottom < -300 || rect.top > windowHeight + 300;
           setIsVisible(!completelyHidden && !nextSectionInView);
         }
         
@@ -83,7 +83,7 @@ export const useSectionBasedVisibility = (sectionId: string, threshold = 0.1) =>
       },
       {
         threshold: [0, threshold, 0.3, 0.7, 1],
-        rootMargin: '0px'
+        rootMargin: '100px 0px 100px 0px'
       }
     );
 

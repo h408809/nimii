@@ -96,7 +96,7 @@ const About: React.FC = () => {
             <motion.p
               variants={itemVariants}
               className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8"
-              animate={{ opacity: isVisible ? 1 : 0.3 }}
+              animate={{ opacity: isVisible ? 1 : 0.5 }}
             >
               I am a passionate Computer Science Engineering student at 
               Maharaja Agrasen Institute of Technology (MAIT), currently in my 3rd year. 
@@ -106,7 +106,7 @@ const About: React.FC = () => {
             <motion.p
               variants={itemVariants}
               className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed"
-              animate={{ opacity: isVisible ? 1 : 0.3 }}
+              animate={{ opacity: isVisible ? 1 : 0.5 }}
             >
               As a University-level Badminton Champion with 2 Silver Medals, 
               I bring the same dedication and strategic thinking to my technical pursuits. Currently serving as 
@@ -127,7 +127,7 @@ const About: React.FC = () => {
               <motion.div
                 className="group relative overflow-hidden"
                 whileHover={{ scale: 1.05 }}
-                animate={{ opacity: isVisible ? 1 : 0.3 }}
+                animate={{ opacity: isVisible ? 1 : 0.6 }}
                 transition={{ delay: achievement.delay }}
               >
                 <div className="glass p-6 rounded-2xl h-full relative z-10">
@@ -177,7 +177,7 @@ const About: React.FC = () => {
         <ScrollAnimatedSection direction="up" delay={0.4} sectionId="about">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
-              animate={{ opacity: isVisible ? 1 : 0.4 }}
+              animate={{ opacity: isVisible ? 1 : 0.6 }}
               transition={{ duration: 0.8 }}
             >
               <h3 className="text-3xl font-bold text-red-600 mb-6">Core Strengths</h3>
@@ -186,7 +186,7 @@ const About: React.FC = () => {
                   <motion.div
                     key={skill.name}
                     className="group"
-                    animate={{ opacity: isVisible ? 1 : 0.4 }}
+                    animate={{ opacity: isVisible ? 1 : 0.6 }}
                     transition={{ delay: index * 0.2 }}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -218,7 +218,7 @@ const About: React.FC = () => {
 
             <motion.div
               className="relative"
-              animate={{ opacity: isVisible ? 1 : 0.4 }}
+              animate={{ opacity: isVisible ? 1 : 0.6 }}
               transition={{ duration: 0.8 }}
             >
               <div className="glass p-8 rounded-2xl relative overflow-hidden">
@@ -254,7 +254,7 @@ const About: React.FC = () => {
           <motion.div
             className="glass p-10 rounded-3xl max-w-4xl mx-auto gradient-border relative overflow-hidden"
             whileHover={{ scale: 1.02 }}
-            animate={{ opacity: isVisible ? 1 : 0.3 }}
+            animate={{ opacity: isVisible ? 1 : 0.6 }}
           >
             {/* Animated background pattern */}
             <motion.div
@@ -268,7 +268,7 @@ const About: React.FC = () => {
 
             <motion.blockquote
               className="text-2xl lg:text-3xl font-medium text-gray-700 mb-6 font-playfair italic text-center relative z-10"
-              animate={{ opacity: isVisible ? 1 : 0.4 }}
+              animate={{ opacity: isVisible ? 1 : 0.6 }}
               transition={{ duration: 1 }}
             >
               "Combining technical expertise with creative problem-solving and athletic discipline, 
@@ -277,7 +277,7 @@ const About: React.FC = () => {
             
             <motion.div
               className="text-center relative z-10"
-              animate={{ opacity: isVisible ? 1 : 0.4 }}
+              animate={{ opacity: isVisible ? 1 : 0.6 }}
               transition={{ delay: 0.5 }}
             >
               <p className="text-red-600 font-bold text-lg">- Nimisha Bhateja</p>
