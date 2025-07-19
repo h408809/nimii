@@ -10,6 +10,10 @@ interface DynamicHeadingProps {
 
 const DynamicHeading: React.FC<DynamicHeadingProps> = ({
   children,
+  level = 'h2',
+  className = '',
+  sectionId
+}) => {
   const [ref, isVisible, isActive, hasBeenVisible] = useSectionBasedVisibility(sectionId, 0.3);
 
   const HeadingTag = level;
@@ -17,7 +21,7 @@ const DynamicHeading: React.FC<DynamicHeadingProps> = ({
   const getAnimationState = () => {
     if (hasBeenVisible) {
       // Once visible, stay visible with subtle changes
-      y: 50,
+      return {
         opacity: isActive ? 1 : 0.9,
         y: 0,
         scale: isActive ? 1 : 0.99,
@@ -28,7 +32,7 @@ const DynamicHeading: React.FC<DynamicHeadingProps> = ({
     if (!isVisible) {
       return {
         opacity: 0.1,
-        y: scrollDirection === 'down' ? -30 : 30,
+        y: -30,
         scale: 0.95,
         filter: 'blur(3px)'
       };
@@ -44,6 +48,7 @@ const DynamicHeading: React.FC<DynamicHeadingProps> = ({
 
   return (
     <motion.div
+      ref={ref}
       animate={isVisible ? "visible" : "hidden"}
       className="relative"
       initial={{
