@@ -5,6 +5,9 @@ import { ExternalLink, Github, Brain, Shield, Newspaper } from 'lucide-react';
 
 const Projects: React.FC = () => {
   const [ref, isVisible, isActive, hasBeenVisible] = useSectionBasedVisibility('projects', 0.1);
+  
+  const containerVariants = {
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
@@ -97,9 +100,8 @@ const Projects: React.FC = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-                animate={{ opacity: isVisible ? 1 : 0.3 }}
           {projects.map((project, index) => (
-          animate={isVisible ? "visible" : "hidden"}
+            <motion.div
               key={project.title}
               variants={itemVariants}
               initial="hidden"
@@ -127,9 +129,12 @@ const Projects: React.FC = () => {
                       </h3>
                     </div>
 
-                          animate={isVisible ? { opacity: 1, x: 0 } : {}}
+                    <motion.p 
+                      className="text-gray-600 mb-6"
+                      animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0.3, x: -10 }}
+                    >
                       {project.description}
-                    </p>
+                    </motion.p>
 
                     <div className="mb-6">
                       <h4 className="text-sm font-semibold text-gray-900 mb-3">Key Features:</h4>
@@ -187,7 +192,7 @@ const Projects: React.FC = () => {
               </div>
             </motion.div>
           ))}
-          animate={isVisible ? "visible" : "hidden"}
+        </div>
 
         <motion.div
           variants={itemVariants}
@@ -215,4 +220,3 @@ const Projects: React.FC = () => {
 };
 
 export default Projects;
-              animate={isVisible ? "visible" : "hidden"}
